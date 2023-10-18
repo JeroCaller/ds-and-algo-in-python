@@ -2,11 +2,10 @@ from typing import Any
 
 
 class StaticStack():
-    """
-    스택의 크기를 고정시킨 스택.
-    """
     def __init__(self, size_: int):
         """
+        스택의 크기를 고정시킨 스택.
+
         size_ : 스택 최대 크기 설정.
         """
         self.stack: list = []
@@ -73,10 +72,10 @@ class StaticStack():
     
 
 class DynamicStack(StaticStack):
-    """
-    크기에 제한을 두지 않고 무한정 크기를 동적으로 늘릴 수 있는 스택.
-    """
     def __init__(self):
+        """
+        크기에 제한을 두지 않고 무한정 크기를 동적으로 늘릴 수 있는 스택.
+        """
         self.stack: list = []
 
     def push(self, one_element):

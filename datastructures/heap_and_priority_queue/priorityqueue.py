@@ -20,12 +20,11 @@ class Data():
 
 
 class PriorityQueue():
-    """
-    우선순위 큐의 최대 크기를 고정시키지 않고, 
-    데이터가 들어오는 대로 저장하는 동적 방식 사용. 
-    """
     def __init__(self, max_mode: bool = True) -> (None):
         """
+        우선순위 큐의 최대 크기를 고정시키지 않고, 
+        데이터가 들어오는 대로 저장하는 동적 방식 사용. 
+
         매개변수
         ------
         max_mode: max binary heap으로 할 지에 대한 변수. \

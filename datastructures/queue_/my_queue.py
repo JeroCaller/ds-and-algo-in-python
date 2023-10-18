@@ -2,13 +2,14 @@ from typing import Any
 
 
 class StaticQueue():
-    """큐의 왼쪽에서 데이터 삽입, 오른쪽에서 데이터 추출 가능한 구조."""
     def __init__(
             self, 
             limit_size: int = 10, 
             msg_on_off: bool = True
         ):
         """
+        큐의 왼쪽에서 데이터 삽입, 오른쪽에서 데이터 추출 가능한 구조.
+
         매개변수
         ------
         limit_size: queue가 담을 수 있는 총 아이템 수 지정.
@@ -85,11 +86,10 @@ class StaticQueue():
     
 
 class DynamicQueue(StaticQueue):
-    """
-    크기 제한없이 동적으로 데이터를 enqueue및 dequeue할 수 있는 동적 큐.
-    """
     def __init__(self, msg_on_off: bool = True) -> (None):
         """
+        크기 제한없이 동적으로 데이터를 enqueue및 dequeue할 수 있는 동적 큐.
+
         매개변수
         ------
         msg_on_off: enqueue, dequeue에서 발생할 수 있는 메시지를 출력할 것인지에 대한 변수. 
