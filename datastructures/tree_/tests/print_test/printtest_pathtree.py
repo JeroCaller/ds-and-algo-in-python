@@ -11,7 +11,8 @@ from tree_.tree import REMOVEALL, REMOVEONE, DONTREMOVE, ALPHABET, LENGTH
 
 # 테스트 함수 매개변수 passed는 해당 테스트 함수의 테스트가 
 # 통과되었는지 여부를 표시하는 인자이다. 
-# 테스트 통과 시 True, 실패 시 False, 예외 발생 시 None을 대입.
+# 테스트 통과 시 True, 실패 시 False, 
+# 예외 발생 시 None을 대입.
 
 def test_appendAll_and_tree_structure(passed: bool | None):
     """
@@ -125,6 +126,21 @@ def test_append_and_tree_structure(passed: bool | None):
     print(ptree.getTreeStructure())
     print("-" * 30)
     print(ptree.getAllLeafAbs())
+
+def test_appendAbs(passed: bool | None):
+    """
+    """
+    ptree = PathTree(always_raise_error=True)
+    paths = [
+        'a.b.c', 'a.a.a', 'a.b.c.d', 'a.b.e', 'a.b.d'
+    ]
+    for p in paths:
+        ptree.appendAbs(p)
+    print(ptree.getTreeStructure())
+    print("-" * 30)
+    print(ptree.getAllLeafAbs())
+    print('-' * 30)
+    print(ptree.lenTree())
 
 def test_replace_simple(passed: bool | None):
     """
@@ -297,10 +313,11 @@ if __name__ == '__main__':
     #test_appendAll_and_tree_structure(True)
     #test_appendAll_several_times(True)
     #test_append_and_tree_structure(True)
+    test_appendAbs(True)
     #test_replace_simple(True)
     #test_remove_merging_case(True)
     #test_repr(True)
     #test_getAllLeafAbs_length_sort(True)
-    test_getAllLeafAbs_length_sort2(True)
+    #test_getAllLeafAbs_length_sort2(True)
     pass
     

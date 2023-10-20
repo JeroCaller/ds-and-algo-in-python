@@ -637,6 +637,65 @@ class TestPathTree(unittest.TestCase):
         self.ptree.setRaiseErrorMode(True)
         with self.assertRaises(RootNotUniqueError):
             self.ptree.appendAll(data)
+                
+    def testAppendAbs(self):
+        # test 1
+        self.ptree.setRaiseErrorMode(True)
+        path = 'a.b.c'
+        self.ptree.appendAbs(path)
+        self.assertEqual(self.ptree.search(path), path)
+        self.assertEqual(self.ptree.lenTree(), 3)
+        self.assertEqual(self.ptree.getParent(path), 'a.b')
+        self.assertEqual(self.ptree.getChildren('b'), {'a.b': ['c']})
+        self.assertEqual(self.ptree.getRoot(), 'a')
+
+        # test 2
+        path = 'a.a.a'
+        self.ptree.appendAbs(path)
+        self.assertEqual(self.ptree.search(path), path)
+        self.assertEqual(self.ptree.lenTree(), 5)
+        self.assertEqual(self.ptree.getRoot(), 'a')
+
+        # test 3
+        path = 'a.b.c.d'
+        self.ptree.appendAbs(path)
+        self.assertEqual(self.ptree.search(path), path)
+        self.assertEqual(self.ptree.lenTree(), 6)
+        self.assertEqual(self.ptree.getRoot(), 'a')
+
+        # test 4
+        path = 'a.b.e'
+        self.ptree.appendAbs(path)
+        self.assertEqual(self.ptree.search(path), path)
+        self.assertEqual(self.ptree.lenTree(), 7)
+        self.assertEqual(self.ptree.getRoot(), 'a')
+
+        # test 5
+        path = 'a.b.d'
+        self.ptree.appendAbs(path)
+        self.assertEqual(self.ptree.search(path), path)
+        self.assertEqual(self.ptree.lenTree(), 8)
+        self.assertEqual(self.ptree.search('d'), ['a.b.c.d', 'a.b.d'])
+        self.assertEqual(self.ptree.getRoot(), 'a')
+
+    def testAppendAbsError(self):
+        """
+        PathTree().AppendAbs() 메서드에서 일어날 수 있는 
+        예외들 테스트. 
+        """
+        self.ptree.setRaiseErrorMode(True)
+        self.ptree.appendAbs('a.b.c')
+
+        # test 1
+        with self.assertRaises(PathAlreadyExistsError):
+            self.ptree.appendAbs('a.b.c')
+
+        # test 2
+        with self.assertRaises(RootNotUniqueError):
+            self.ptree.appendAbs('10.j.q.k.a')
+
+        self.assertEqual(self.ptree.getRoot(), 'a')
+        self.assertEqual(self.ptree.lenTree(), 3)
 
     def testReplaceSimple(self):
         # test 1

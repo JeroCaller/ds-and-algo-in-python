@@ -1,0 +1,4 @@
+study/
+__pycache__
+.vscode/
+*.txt

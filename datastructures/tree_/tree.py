@@ -1000,7 +1000,7 @@ class PathTree(Tree):
         
         raise_error 여부에 따라 예외가 발생하거나 메서드 실행이 중단됨. 
         raise_error: 발생할 수 있는 각종 에러에 대해, raise_error 인자를 True로 설정 시,
-        에러의 종류에 따라 예외를 발생시킨다. 예외 종류는 아래 '반환값' 파트에서 자세히 설명됨. 
+        에러의 종류에 따라 예외를 발생시킨다. 예외 종류는 아래에 자세히 설명됨. 
         False로 설정 시 에러가 발생해도 이를 무시하고 메서드 실행을 중단한다. 
 
         발생할 수 있는 예외 종류
@@ -1042,6 +1042,52 @@ class PathTree(Tree):
             except KeyError: self._adj_list[p] = [new_node]
             else: self._adj_list[p].sort()
             self._adj_list[new_node_abs] = []
+            self._node_number += 1
+
+    def appendAbs(self, new_path: AbsPath, raise_error: bool = False) -> (None):
+        """
+        새로 삽입하고자 하는 절대경로를 대입하면 트리에 삽입해주는 메서드. 
+        절대경로에 명시된 모든 노드들이 삽입된다. 
+        단, 루트 노드가 트리에 존재할 때 삽입하고자 하는 노드의 절대경로는 
+        루트 노드 이름부터 시작해야 한다. 
+        삽입 예)
+        >>> tree_obj = PathTree()
+        >>> tree_obj.appendAbs('a.b.c.d')
+
+        매개변수
+        ------
+        raise_error: 발생할 수 있는 각종 에러에 대해, raise_error 인자를 True로 설정 시,
+        에러의 종류에 따라 예외를 발생시킨다. 예외 종류는 아래에 자세히 설명됨. 
+        False로 설정 시 에러가 발생해도 이를 무시하고 메서드 실행을 중단한다. 
+
+        발생할 수 있는 예외 종류
+        -----
+        PathAlreadyExistsError(): 새로 삽입하고자 하는 새 노드의 절대경로가 이미 
+        트리 내에 있을 경우.
+        RootNotUniqueError(): 새 노드의 절대경로에 적힌 루트 노드의 이름과 트리에 이미 존재하는 
+        루트 노드 이름과 다를 경우. 
+        """
+        if self.search(new_path):
+            if self.always_raise_error or raise_error: raise PathAlreadyExistsError()
+            else: return
+        path_split = new_path.split(self._delimiter)
+        for i in range(len(path_split)):
+            if i == 0:
+                if self._root is None:
+                    self._root = path_split[i]
+                    self._adj_list[path_split[i]] = []
+                    self._node_number += 1
+                elif self._root != path_split[i]:
+                    if self.always_raise_error or raise_error: raise RootNotUniqueError()
+                    else: return
+                continue
+            path = self._delimiter.join(path_split[:i+1])
+            if self.search(path): continue
+            p_path, cur_node = self.splitAbsPath(path)
+            try: self._adj_list[p_path].append(cur_node)
+            except KeyError: self._adj_list[p_path] = [cur_node]
+            else: self._adj_list[p_path].sort()
+            if path not in self._adj_list: self._adj_list[path] = []
             self._node_number += 1
 
     def appendAll(self, structure: list[str], raise_error: bool = False) -> (None):
