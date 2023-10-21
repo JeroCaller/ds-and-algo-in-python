@@ -112,6 +112,18 @@ class Tree():
 
     def getRoot(self) -> (Node | None): return self._root
 
+    @property
+    def delimiter(self) -> (str): return self._delimiter
+
+    @delimiter.setter
+    def delimiter(self, new_delimiter: str) -> (None): 
+        temp_adjl = {}
+        for k, v in self._adj_list.items():
+            new_k = k.replace(self._delimiter, new_delimiter)
+            temp_adjl[new_k] = v
+        self._adj_list = temp_adjl.copy()
+        self._delimiter = new_delimiter
+
     def getRaiseErrorMode(self) -> (bool): 
         """
         트리 내 특정 메서드 호출 시 예외 상황이 발생했을 때 예외를 항상 

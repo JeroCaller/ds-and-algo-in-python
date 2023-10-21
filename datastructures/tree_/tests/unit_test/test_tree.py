@@ -441,6 +441,18 @@ class TestPathTree(unittest.TestCase):
         self.assertEqual(self.ptree.lenTree(), 0)
         self.assertEqual(self.ptree.getRaiseErrorMode(), False)
 
+    def testChangeDelimiter(self):
+        data = [
+            'a.b.c.d.e', 'a.b.c.f', 'a.b.g.h', 'a.i.j'
+        ]
+        self.ptree.appendAll(data, True)
+        self.ptree.delimiter = '/'
+        self.assertEqual(self.ptree.delimiter, '/')
+        self.assertEqual(self.ptree.lenTree(), 10)
+        leaf_nodes = self.ptree.getAllLeafAbs()
+        for node in leaf_nodes:
+            self.assertIn('/', node)
+
     def testisAbsPath(self):
         self.assertEqual(self.ptree.isAbsPath('a.b'), True)
         self.assertEqual(self.ptree.isAbsPath('a'), False)

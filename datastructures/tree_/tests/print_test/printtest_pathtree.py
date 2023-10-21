@@ -1,5 +1,6 @@
 import sys
 from dirimporttool import get_super_dir_directly
+from pprint import pprint
 
 for i in range(1, 4):
     super_dir = get_super_dir_directly(__file__, i)
@@ -307,17 +308,35 @@ def test_getAllLeafAbs_length_sort2(passed: bool | None):
     print("-----")
     print(ptree.getAllLeafAbs(LENGTH, False))
 
+def test_change_delimiter(passed: bool | None):
+    """
+    """
+    data = [
+            'a.b.c.d.e', 'a.b.c.f', 'a.b.g.h', 'a.i.j'
+    ]
+    ptree = PathTree(always_raise_error=True)
+    ptree.appendAll(data)
+    ptree.delimiter = '/'
+    pprint(ptree.getAllLeafAbs())
+    print("-" * 30)
+    pprint(ptree.getAdjList())
+    ptree.delimiter = '.'
+    pprint(ptree.getAllLeafAbs())
+    print("-" * 30)
+    pprint(ptree.getAdjList())
+
 if __name__ == '__main__':
     # 출력하고자 하는 함수 코드만 주석 해제.
 
     #test_appendAll_and_tree_structure(True)
     #test_appendAll_several_times(True)
     #test_append_and_tree_structure(True)
-    test_appendAbs(True)
+    #test_appendAbs(True)
     #test_replace_simple(True)
     #test_remove_merging_case(True)
     #test_repr(True)
     #test_getAllLeafAbs_length_sort(True)
     #test_getAllLeafAbs_length_sort2(True)
+    test_change_delimiter(None)
     pass
     
