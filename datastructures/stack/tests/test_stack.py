@@ -102,7 +102,7 @@ class TestStack(unittest.TestCase):
         self.st.clear()
         self.assertEqual(self.st.is_empty(), True)
         self.assertEqual(self.st.getLength(), 0)
-        self.assertEqual(getattr(self.st, 'stack'), [])
+        self.assertEqual(getattr(self.st, '_stack'), [])
         self.assertEqual(self.st.__repr__(), '[]')
 
 

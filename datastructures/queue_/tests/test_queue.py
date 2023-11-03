@@ -1,8 +1,10 @@
 import unittest
 import sys
+
 from dirimporttool import get_super_dir_directly
 super_dir = get_super_dir_directly(__file__, 2)
 sys.path.append(super_dir)
+
 from queue_.my_queue import StaticQueue, DynamicQueue
 
 

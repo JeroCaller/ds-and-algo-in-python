@@ -5,9 +5,11 @@ my_linked_list의 여러 형태의 연결 리스트들을 모두 테스트하는
 import unittest
 from collections import namedtuple
 import sys
+
 from dirimporttool import get_super_dir_directly
 super_dir = get_super_dir_directly(__file__, 2)
 sys.path.append(super_dir)
+
 from linked_list.my_linked_list import (
     LinkedList, LinkedListQueue, LinkedListStack, 
     DoublyLinkedList, CircularLinkedList)
@@ -168,7 +170,7 @@ class TestLinkedList(unittest.TestCase):
         expected_result = ' -> '.join(['a', 'b', 'd'])
         self.assertEqual(self.linked_list.__repr__(), expected_result)
         self.assertEqual(self.linked_list.getLength(), 3)
-        self.assertEqual(self.linked_list.remainingNodeNumbers(), 3)
+        self.assertEqual(self.linked_list._remainingNodeNumbers(), 3)
 
         # test2
         target_index = 0
@@ -176,7 +178,7 @@ class TestLinkedList(unittest.TestCase):
         expected_result = ' -> '.join(['b', 'd'])
         self.assertEqual(self.linked_list.__repr__(), expected_result)
         self.assertEqual(self.linked_list.getLength(), 2)
-        self.assertEqual(self.linked_list.remainingNodeNumbers(), 2)
+        self.assertEqual(self.linked_list._remainingNodeNumbers(), 2)
 
         # test3
         target_index = self.linked_list.getLength() - 1
@@ -184,7 +186,7 @@ class TestLinkedList(unittest.TestCase):
         expected_result = ' -> '.join(['b'])
         self.assertEqual(self.linked_list.__repr__(), expected_result)
         self.assertEqual(self.linked_list.getLength(), 1)
-        self.assertEqual(self.linked_list.remainingNodeNumbers(), 1)
+        self.assertEqual(self.linked_list._remainingNodeNumbers(), 1)
 
         # test4
         target_index = 5
@@ -197,7 +199,7 @@ class TestLinkedList(unittest.TestCase):
             ll.deleteNodeByIndex(0)
 
         self.linked_list.clear()
-        self.assertEqual(self.linked_list.remainingNodeNumbers(), 0)
+        self.assertEqual(self.linked_list._remainingNodeNumbers(), 0)
 
     def test_delete_node_by_value(self):
         """
@@ -210,7 +212,7 @@ class TestLinkedList(unittest.TestCase):
         expected_result = ' -> '.join(['a', 'b', 'd'])
         self.assertEqual(self.linked_list.__repr__(), expected_result)
         self.assertEqual(self.linked_list.getLength(), 3)
-        self.assertEqual(self.linked_list.remainingNodeNumbers(), 3)
+        self.assertEqual(self.linked_list._remainingNodeNumbers(), 3)
 
         # test2
         target_value = 'a'
@@ -218,7 +220,7 @@ class TestLinkedList(unittest.TestCase):
         expected_result = ' -> '.join(['b', 'd'])
         self.assertEqual(self.linked_list.__repr__(), expected_result)
         self.assertEqual(self.linked_list.getLength(), 2)
-        self.assertEqual(self.linked_list.remainingNodeNumbers(), 2)
+        self.assertEqual(self.linked_list._remainingNodeNumbers(), 2)
 
         # test3
         target_value = 'a'
@@ -266,14 +268,14 @@ class TestLinkedList(unittest.TestCase):
         self.linked_list.clear()
         self.assertEqual(self.linked_list.__repr__(), "빈 연결리스트.")
         self.assertEqual(self.linked_list.getLength(), 0)
-        self.assertEqual(self.linked_list.remainingNodeNumbers(), 0)
+        self.assertEqual(self.linked_list._remainingNodeNumbers(), 0)
 
         # test2
         ll = LinkedList()
         ll.clear()
         self.assertEqual(ll.__repr__(), "빈 연결리스트.")
         self.assertEqual(ll.getLength(), 0)
-        self.assertEqual(ll.remainingNodeNumbers(), 0)
+        self.assertEqual(ll._remainingNodeNumbers(), 0)
 
     def test_iter(self):
         """
@@ -458,7 +460,7 @@ class TestDoublyLinkedList(unittest.TestCase):
         """
         self.assertEqual(self.dll.__repr__(), "빈 연결리스트.")
         self.assertEqual(self.dll.getLength(), 0)
-        self.assertEqual(self.dll.remainingNodeNumbers(), 0)
+        self.assertEqual(self.dll._remainingNodeNumbers(), 0)
 
     def testPrint(self):
         """
@@ -627,7 +629,7 @@ class TestDoublyLinkedList(unittest.TestCase):
         expected_result = 'b <-> c <-> d'
         self.assertEqual(self.dll.__repr__(), expected_result)
         self.assertEqual(self.dll.getLength(), 3)
-        self.assertEqual(self.dll.remainingNodeNumbers(), 3)
+        self.assertEqual(self.dll._remainingNodeNumbers(), 3)
 
         # test2
         target_index = 1
@@ -635,7 +637,7 @@ class TestDoublyLinkedList(unittest.TestCase):
         expected_result = 'b <-> d'
         self.assertEqual(self.dll.__repr__(), expected_result)
         self.assertEqual(self.dll.getLength(), 2)
-        self.assertEqual(self.dll.remainingNodeNumbers(), 2)
+        self.assertEqual(self.dll._remainingNodeNumbers(), 2)
 
         # test3
         target_index = 1
@@ -643,7 +645,7 @@ class TestDoublyLinkedList(unittest.TestCase):
         expected_result = 'b'
         self.assertEqual(self.dll.__repr__(), expected_result)
         self.assertEqual(self.dll.getLength(), 1)
-        self.assertEqual(self.dll.remainingNodeNumbers(), 1)
+        self.assertEqual(self.dll._remainingNodeNumbers(), 1)
 
         # test4
         with self.assertRaises(IndexError):
@@ -664,7 +666,7 @@ class TestDoublyLinkedList(unittest.TestCase):
         expected_result = 'b <-> c <-> d'
         self.assertEqual(self.dll.__repr__(), expected_result)
         self.assertEqual(self.dll.getLength(), 3)
-        self.assertEqual(self.dll.remainingNodeNumbers(), 3)
+        self.assertEqual(self.dll._remainingNodeNumbers(), 3)
 
         # test2
         target_value = 'c'
@@ -672,7 +674,7 @@ class TestDoublyLinkedList(unittest.TestCase):
         expected_result = 'b <-> d'
         self.assertEqual(self.dll.__repr__(), expected_result)
         self.assertEqual(self.dll.getLength(), 2)
-        self.assertEqual(self.dll.remainingNodeNumbers(), 2)
+        self.assertEqual(self.dll._remainingNodeNumbers(), 2)
 
         # test3
         target_value = 'd'
@@ -680,7 +682,7 @@ class TestDoublyLinkedList(unittest.TestCase):
         expected_result = 'b'
         self.assertEqual(self.dll.__repr__(), expected_result)
         self.assertEqual(self.dll.getLength(), 1)
-        self.assertEqual(self.dll.remainingNodeNumbers(), 1)
+        self.assertEqual(self.dll._remainingNodeNumbers(), 1)
 
         # test4
         with self.assertRaises(TypeError):
@@ -766,11 +768,11 @@ class TestCircleLL(unittest.TestCase):
         clear() 메서드 테스트. 
         """
         self.assertEqual(self.cll.getLength(), 10)
-        self.assertEqual(self.cll.remainingNodeNumbers(), 10)
+        self.assertEqual(self.cll._remainingNodeNumbers(), 10)
         self.cll.clear()
         self.assertEqual(self.cll.__repr__(), "빈 연결리스트.")
         self.assertEqual(self.cll.getLength(), 0)
-        self.assertEqual(self.cll.remainingNodeNumbers(), 0)
+        self.assertEqual(self.cll._remainingNodeNumbers(), 0)
 
     def testInputData(self):
         """

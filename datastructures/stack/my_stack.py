@@ -1,58 +1,74 @@
+"""스택 자료구조 구현 모듈.
+크기가 고정된 스택(StaticStack)과 
+크기를 동적으로 변경시킬 수 있는 스택(DynamicStack)으로 구성되어 있음. 
+
+"""
+
 from typing import Any
 
+__all__ = [
+    'StaticStack', 
+    'DynamicStack',
+]
 
 class StaticStack():
     def __init__(self, size_: int):
-        """
-        스택의 크기를 고정시킨 스택.
+        """스택의 크기를 고정시킨 스택.
 
-        size_ : 스택 최대 크기 설정.
+        Parameters
+        ----------
+        size_ : int 
+            스택 최대 크기 설정.
+        
         """
-        self.stack: list = []
+        self._stack: list = []
         self.size_: int = size_
 
     def is_empty(self) -> (bool):
-        return self.stack == []
+        return self._stack == []
 
     def push(self, one_element) -> (bool):
-        """
-        맨 끝에 요소 삽입. 
-        정해진 size_만큼만 삽입할 수 있다.\n
-        return type)\n
-        True: 삽입 성공.\n
-        False: 삽입 실패.\n
+        """맨 끝에 요소 삽입. 
+
+        정해진 size_만큼만 삽입할 수 있다.
+
+        Parameters
+        ----------
+        one_element: Any
+            스택에 넣을 요소. 스택 내 요소들의 타입은 
+            되도록 통일시킨다. 
+        
+        Returns
+        -------
+        bool
+            True: 삽입 성공 시 반환값.
+            False: 삽입 실패 시 반환값.
+
         """
         if self.getLength() == self.size_:
             print("스택의 최대 크기에 도달하여 요소를 추가할 수 없습니다.")
             return False
-        self.stack.append(one_element)
+        self._stack.append(one_element)
         return True
 
     def pop(self) -> (Any | None):
-        """
-        맨 끝 요소 추출 후 스택에서 제거.
-        """
+        """맨 끝 요소 추출 후 스택에서 제거."""
         try:
-            return self.stack.pop()
+            return self._stack.pop()
         except IndexError:
             print("스택이 비어있어 반환할 아이템이 없습니다.")
-            return
-        
+            return None
+
     def peek(self):
-        """
-        맨 끝 요소 조회. 
-        """
-        return self.stack[-1]
-    
+        """맨 끝 요소 조회."""
+        return self._stack[-1]
+
     def getLength(self) -> (int):
-        """
-        현재 스택에 들어있는 요소들의 수 반환.
-        """
-        return len(self.stack)
-    
+        """현재 스택에 들어있는 요소들의 수 반환."""
+        return len(self._stack)
+
     def setNewSize(self, new_size: int):
-        """
-        스택의 최대 크기 재설정. 
+        """스택의 최대 크기 재설정. 
         현재 스택에 들어있는 요소들의 수보다 더 작게 설정하지 못하도록 함.
         """
         if new_size < self.getLength():
@@ -62,32 +78,24 @@ class StaticStack():
         self.size_ = new_size
 
     def clear(self):
-        """
-        스택을 모두 비운다.
-        """
-        self.stack.clear()
-    
+        """스택을 모두 비운다."""
+        self._stack.clear()
+
     def __repr__(self):
-        return repr(self.stack)
-    
+        return repr(self._stack)
+
 
 class DynamicStack(StaticStack):
     def __init__(self):
-        """
-        크기에 제한을 두지 않고 무한정 크기를 동적으로 늘릴 수 있는 스택.
-        """
-        self.stack: list = []
+        """크기에 제한을 두지 않고 무한정 크기를 동적으로 늘릴 수 있는 스택."""
+        self._stack: list = []
 
     def push(self, one_element):
-        """
-        맨 끝에 요소 삽입. 
-        """
-        self.stack.append(one_element)
+        """맨 끝에 요소 삽입."""
+        self._stack.append(one_element)
 
     def setNewSize(self):
-        """
-        DynamicStack에서는 사용하지 않는 메서드. 
-        """
+        """DynamicStack에서는 사용하지 않는 메서드. """
         pass
 
 
@@ -105,8 +113,8 @@ def test_static_stack():
     print(f"맨 마지막에 있는 멘토스의 색은? {stack.peek()}")
     print(f"멘토스 다 먹었나? {stack.is_empty()}")
     print(stack)
-    
-    
+
+
 if __name__ == '__main__':
     test_static_stack()
     
