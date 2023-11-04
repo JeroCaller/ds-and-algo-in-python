@@ -1,9 +1,11 @@
 import unittest
 import sys
+
 from dirimporttool import get_super_dir_directly
 for i in range(1, 3):
     super_dir = get_super_dir_directly(__file__, i)
     sys.path.append(super_dir)
+
 from hash_table.my_hash_table import HashTable
 
 dataset = [

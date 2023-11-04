@@ -1,19 +1,31 @@
+"""최대 이진 힙(Max Binary Heap)을 이용하여 우선순위 큐를 구현.
+
 """
-최대 이진 힙(Max Binary Heap)을 이용하여 우선순위 큐를 구현.
-"""
+
 from multipledispatch import dispatch
+
+__all__ = [
+    'Data',
+    'PriorityQueue'
+]
 
 # type alias
 Value = object
 Priority = int
 
+
 class Data():
+    """(값, 우선순위) 쌍의 데이터 객체."""
+
     def __init__(self, value: any = None, priority: int = 0) -> (None):
         """
-        (값, 우선순위) 쌍의 데이터 객체. \n
-        매개변수 설명)\n
-        value: 데이터의 값. \n
-        priority: 데이터의 우선순위. 숫자가 높을 수록 최우선순위.
+        Parameters
+        ----------
+        value : Any | None, default None
+            데이터의 값. 
+        priority : int, default 0
+            데이터의 우선순위. 숫자가 높을 수록 최우선순위.
+
         """
         self.value: any = value
         self.priority: int = priority
@@ -21,35 +33,36 @@ class Data():
 
 class PriorityQueue():
     def __init__(self, max_mode: bool = True) -> (None):
-        """
-        우선순위 큐의 최대 크기를 고정시키지 않고, 
+        """우선순위 큐의 최대 크기를 고정시키지 않고, 
         데이터가 들어오는 대로 저장하는 동적 방식 사용. 
 
-        매개변수
-        ------
-        max_mode: max binary heap으로 할 지에 대한 변수. \
-        True시 max binary heap, 즉 priority의 값이 큰 데이터가 힙 구조의 \
-        상위 계층에 위치하도록 함. (dequeue시 priority의 값이 가장 큰 데이터가 추출된다) \
-        False 시 min binary heap, 즉, priority 값이 작은 데이터가 \
-        힙 구조의 상위 계층에 위치하도록 함. (dequeue시 priority의 값이 가장 작은 데이터가 추출된다)\n
+        Parameters
+        ----------
+        max_mode : bool, default True
+            max binary heap으로 할 지에 대한 변수. 
+            True시 max binary heap, 즉 priority의 값이 큰 데이터가 힙 구조의
+            상위 계층에 위치하도록 함. (dequeue시 priority의 값이 가장 큰 데이터가 추출된다)
+            False 시 min binary heap, 즉, priority 값이 작은 데이터가 
+            힙 구조의 상위 계층에 위치하도록 함. (dequeue시 priority의 값이 가장 작은 데이터가 추출된다)
 
-        인스턴스 속성
-        --------
-        self.heap_array: 인덱스 계산 편의상 배열 내 데이터의 저장 위치는 \
-        1부터 시작함. 즉, 인덱스 0은 비워둠. \n
+        Attributes
+        ----------
+        self.heap_array : list[Data], default [None]
+            인덱스 계산 편의상 배열 내 데이터의 저장 위치는 
+            1부터 시작함. 즉, 인덱스 0은 비워둠. 
+        
         """
         self.heap_array: list[Data] = [None]
         self.N = len(self.heap_array) - 1
         self.max_mode = max_mode
 
     def __contains__(self, search: Value | Priority) -> (bool):
-        """
-        search가 우선순위 큐에 있는지 검사한 후, 존재하면 True, 
+        """search가 우선순위 큐에 있는지 검사한 후, 존재하면 True, 
         그렇지 않으면 False 반환.
         """
-        # 매개변수 search의 자료형이 int가 아니라면 해당 변수는 
-        # Value에 해당된다고 가정. 
-        if type(search) != int:
+        # 매개변수 search의 자료형이 int가 아니라면 해당 변수는
+        # Value에 해당된다고 가정.
+        if not isinstance(search, int):
             for data in self.heap_array[1:]:
                 if search == data.value: return True
             return False
@@ -64,55 +77,47 @@ class PriorityQueue():
             for data_obj in self.heap_array[1:]:
                 return_data.append((data_obj.value, data_obj.priority))
             return str(return_data)
-        else: return "None"
+        return "None"
 
     def clear(self) -> (None):
-        """
-        우선순위 큐 내부를 모두 비운다. 
-        """
+        """우선순위 큐 내부를 모두 비운다."""
         del self.heap_array
         self.heap_array: list[Data] = [None]
 
     def showAll(self) -> (list[tuple[Value, Priority]]):
-        """
-        우선순위 큐 내 모든 데이터 반환. 
-        """
+        """우선순위 큐 내 모든 데이터 반환."""
         all_data = []
         for data in self.heap_array[1:]:
             all_data.append((data.value, data.priority))
         return all_data
-    
+
     def isEmpty(self) -> (bool):
-        """
-        현재 우선순위 큐가 비어있는지 확인. 
+        """현재 우선순위 큐가 비어있는지 확인. 
         비어있으면 True 반환.
         """
         return self.getCurrentSize() == 0
 
     def getCurrentSize(self) -> (int):
-        """
-        현재 힙 내에 저장된 데이터의 수 업데이트 및 반환.
-        """
+        """현재 힙 내에 저장된 데이터의 수 업데이트 및 반환."""
         self.N = len(self.heap_array) - 1
         return self.N
-    
+
     def peek(self) -> (Data | None):
-        """
-        최우선순위 데이터를 반환. 
+        """최우선순위 데이터를 반환. 
         검색만 하고 실제로 큐에서 제거하진 않는다. 
         """
         return self.heap_array[1] if not self.isEmpty() else None
-    
+
     def __isLess(self, a: Data | None, b: Data | None) -> (bool | None):
-        """
-        a < b ? \n
+        """a < b ?
+
         힙 내에 존재하는 두 데이터 간 우선순위의 대소를 비교 후, 
         a가 작으면 True, b가 작으면 False 반환. 
         만약 a, b 중 하나라도 None이면 None을 반환. 
         """
         if (a is None) or (b is None): return None
         return a.priority < b.priority
-    
+
     def __switchData(self, a_index: int | None, b_index: int | None) -> (None):
         """
         힙 내에 두 데이터의 위치를 바꾼다. 
@@ -132,7 +137,7 @@ class PriorityQueue():
         if parent_index >= 1:
             return (self.heap_array[parent_index], parent_index)
         return None
-    
+
     def __getChild(self, parent_index: int) \
         -> (tuple[tuple[Data, int] | tuple[None, None], tuple[Data, int] | tuple[None, None]]):
         """
@@ -141,50 +146,53 @@ class PriorityQueue():
         """
         lchild_index = parent_index * 2
         rchild_index = parent_index * 2 + 1
-        #if lchild_index <= self.N: 
+        #if lchild_index <= self.N:
         if lchild_index <= self.getCurrentSize():
             lchild = (self.heap_array[lchild_index], lchild_index)
         else: lchild = (None, None)
-        #if rchild_index <= self.N: 
+        #if rchild_index <= self.N:
         if rchild_index <= self.getCurrentSize():
             rchild = (self.heap_array[rchild_index], rchild_index)
         else: rchild = (None, None)
         return (lchild, rchild)
-    
+
     @dispatch(object, int)
     def enqueue(self, value: any, priority: int) -> (None):
-        """
-        새 데이터 입력. 
+        """새 데이터 입력. 
 
-        매개변수
-        -------
-        value: 값. 
-        priority: 우선순위 값.
+        Parameters
+        ----------
+        value : Any
+            값. 
+        priority : int
+            우선순위 값.
+
         """
         self.__enqueue(Data(value, priority))
 
     @dispatch(tuple)
     def enqueue(self, value_priority: tuple[any, int]) -> (None):
-        """
-        새 데이터 입력.
+        """새 데이터 입력.
 
-        매개변수
-        -------
-        value_priority: (value, priority)
+        Parameters
+        ----------
+        value_priority : (value, priority)
+
         """
         self.__enqueue(Data(value_priority[0], value_priority[1]))
 
     def __enqueue(self, new_data: Data) -> (None):
-        """
-        새 데이터 입력. 
+        """새 데이터 입력. 
         
-        매개변수
-        ---
-        new_data: Data(value, priority) 형태로 작성. \
-        반드시 Data 객체를 사용하여 값과 우선순위를 전달해야 함.
+        Parameters
+        ----------
+        new_data
+            Data(value, priority) 형태로 작성.
+            반드시 Data 객체를 사용하여 값과 우선순위를 전달해야 함.
+        
         """
         self.heap_array.append(new_data)
-        
+
         # 힙 구조 재구성
         target_index = self.getCurrentSize()
         target_data = self.heap_array[target_index]
@@ -203,23 +211,30 @@ class PriorityQueue():
             else: break  # 이미 경로 내 정렬이 모두 끝났으므로 작업 종료.
 
     def dequeue(self) -> (Data | None):
-        """
-        최우선순위 데이터 반환 후 우선순위 큐 내에서 삭제. 
-        큐 내에 데이터가 하나도 없으면 None 반환. \n
+        """최우선순위 데이터 반환 후 우선순위 큐 내에서 삭제. 
+
         최대 이진 힙의 경우, 힙 구조 변경 시 두 자식 노드들 중 더 큰 
         우선순위 값을 가지는 자식 노드와 부모 노드의 위치를 바꾼다. 
         최소 이진 힙의 경우, 힙 구조 변경 시 두 자식 노드들 중 더 작은 
         우선순위 값을 가지는 자식 노드와 부모 노드의 위치를 바꾼다. 
+
+        Returns
+        -------
+        Data
+            Data 객체
+        None
+            큐 내에 데이터가 하나도 없을 때 반환됨. 
+        
         """
         try:
             return_data = self.heap_array[1]
         except IndexError:
             print("우선순위 큐가 비어있어 추출할 데이터가 없습니다.")
             return None
-        
+
         if self.getCurrentSize() <= 1:
-            # 힙 구조에 딱 하나의 값만 존재하는 경우 (그리고 해당 값을 삭제하려는 경우), 
-            # 힙 구조를 재구성할 필요가 없다. 
+            # 힙 구조에 딱 하나의 값만 존재하는 경우 (그리고 해당 값을 삭제하려는 경우),
+            # 힙 구조를 재구성할 필요가 없다.
             del self.heap_array[-1]
             return return_data
 
@@ -270,7 +285,7 @@ class PriorityQueue():
                 lchild, rchild = self.__getChild(target_index)
             else: break  # 이미 경로 내 정렬이 모두 끝났으므로 작업 종료.
         return return_data
-    
+
 
 def test_pq1():
     test_dataset = [
@@ -338,7 +353,7 @@ def test_min_pq():
 
 def test_pq_negative_p():
     test_data = [
-        ('고양이', -12), ('사자', -13), ('치타', -11), ('곰', -4), ('바다사자', -7), 
+        ('고양이', -12), ('사자', -13), ('치타', -11), ('곰', -4), ('바다사자', -7),
         ('개', -9), ('기린', -3),
     ]
     pq = PriorityQueue(False)

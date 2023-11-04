@@ -1,5 +1,8 @@
 changelog
 - - -
+> 2023-11-04
+> - datastructures 패키지 내 일부 코드 리팩토링.
+
 > 2023-11-03
 > - my_stack.py, my_queue.py, my_linked_list.py 코드 리팩토링.
 

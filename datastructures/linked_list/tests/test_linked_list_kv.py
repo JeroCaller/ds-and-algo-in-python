@@ -1,9 +1,11 @@
 import unittest
 import sys
+
 from dirimporttool import get_super_dir_directly
 super_dir = get_super_dir_directly(__file__, 2)
 sys.path.append(super_dir)
-from linked_list.linked_list_kv import (LinkedList)
+
+from linked_list.linked_list_kv import LinkedList
 
 
 class TestLinkedList(unittest.TestCase):
@@ -25,8 +27,7 @@ class TestLinkedList(unittest.TestCase):
         self.ll.clear()
 
     def testEmpty(self):
-        """
-        빈 연결리스트 테스트. 
+        """빈 연결리스트 테스트. 
         """
         self.assertEqual(self.ll.__repr__(), "<empty>")
         self.assertEqual(self.ll.getLength(), 0)
@@ -55,7 +56,7 @@ class TestLinkedList(unittest.TestCase):
         
     def testRepr(self):
         """
-        need_dataset\n
+        need_dataset
         __repr__() 메서드 테스트. 
         """
         expected_result = \
@@ -148,7 +149,7 @@ class TestLinkedList(unittest.TestCase):
         """
         self.assertEqual(self.ll.popFront(False), ('책', 12000))
         self.assertEqual(self.ll.getLength(), 3)
-        self.assertEqual(self.ll.remainingNodeNumbers(), 3)
+        self.assertEqual(self.ll._remainingNodeNumbers(), 3)
         self.assertEqual(self.ll.items(), [
             ('계산기', 5000),
             ('이어폰', 20000),
@@ -159,7 +160,7 @@ class TestLinkedList(unittest.TestCase):
 
         self.assertEqual(self.ll.popBack(False), ('립밤', 5000))
         self.assertEqual(self.ll.getLength(), 2)
-        self.assertEqual(self.ll.remainingNodeNumbers(), 2)
+        self.assertEqual(self.ll._remainingNodeNumbers(), 2)
         self.assertEqual(self.ll.items(), [
             ('계산기', 5000),
             ('이어폰', 20000),
@@ -185,7 +186,7 @@ class TestLinkedList(unittest.TestCase):
         self.assertEqual(self.ll.keys(), ['책', '계산기', '립밤'])
         self.assertEqual(self.ll.values(), [12000, 5000, 5000])
         self.assertEqual(self.ll.getLength(), 3)
-        self.assertEqual(self.ll.remainingNodeNumbers(), 3)
+        self.assertEqual(self.ll._remainingNodeNumbers(), 3)
         self.assertEqual(self.ll.getValueByKey(target_key), None)
         self.assertEqual(self.ll.findNodeByKey(target_key), (None, None, None))
 
@@ -201,7 +202,7 @@ class TestLinkedList(unittest.TestCase):
         self.assertEqual(self.ll.keys(), ['계산기', '립밤'])
         self.assertEqual(self.ll.values(), [5000, 5000])
         self.assertEqual(self.ll.getLength(), 2)
-        self.assertEqual(self.ll.remainingNodeNumbers(), 2)
+        self.assertEqual(self.ll._remainingNodeNumbers(), 2)
         self.assertEqual(self.ll.getValueByKey(target_key), None)
         self.assertEqual(self.ll.findNodeByKey(target_key), (None, None, None))
 
@@ -216,7 +217,7 @@ class TestLinkedList(unittest.TestCase):
         self.assertEqual(self.ll.keys(), ['계산기'])
         self.assertEqual(self.ll.values(), [5000])
         self.assertEqual(self.ll.getLength(), 1)
-        self.assertEqual(self.ll.remainingNodeNumbers(), 1)
+        self.assertEqual(self.ll._remainingNodeNumbers(), 1)
         self.assertEqual(self.ll.getValueByKey(target_key), None)
         self.assertEqual(self.ll.findNodeByKey(target_key), (None, None, None))
 
