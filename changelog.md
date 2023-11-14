@@ -1,5 +1,10 @@
 changelog
 - - -
+> 2023-11-15
+> - datastructure -> tree.py
+>     - Tree, PathTree에 iter special method 구현 및 유닛 테스트 구현.
+> - README.md 수정 -> 구현 기능 목록 상세히 열거.
+
 > 2023-11-04
 > - datastructures 패키지 내 일부 코드 리팩토링.
 

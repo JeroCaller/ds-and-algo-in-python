@@ -407,6 +407,62 @@ class TestTree(unittest.TestCase):
         self.assertEqual(tree_obj.lenTree(), 1)
         self.assertEqual(tree_obj._root, 'root')
 
+    def testIter(self):
+        """__iter__ 작동 테스트.
+
+        테스트 데이터 구조)
+        a
+        ├ b
+        │ ├ c
+        │ │ └ d
+        │ └ e
+        └ f
+          ├ g
+          │ ├ h
+          │ └ i
+          │   └ j
+          │     └ k
+          └ l
+            ├ m
+            │ └ n
+            │   └ o
+            └ p
+              └ q
+        
+        """
+        data = [
+            'a.b.c.d',
+            'a.b.e',
+            'a.f.g.h',
+            'a.f.g.i.j.k',
+            'a.f.l.m.n.o',
+            'a.f.l.p.q'
+        ]
+        self.tree.appendAll(data, True)
+
+        # test DFS
+        all_nodes = []
+        for node in self.tree:
+            all_nodes.append(node)
+        self.assertEqual(len(all_nodes), self.tree.lenTree())
+        compare = [
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+            'k', 'l', 'm', 'n', 'o', 'p', 'q', 
+        ]
+        self.assertEqual(all_nodes, compare)
+
+        # test BFS
+        self.tree.setIterMode(Tree.IterMode.BFS)
+        all_nodes.clear()
+        for node in self.tree:
+            all_nodes.append(node)
+        self.assertEqual(len(all_nodes), self.tree.lenTree())
+        compare = [
+            'a', 'b', 'f', 'c', 'e', 'g', 'l', 'd', 'h', 'i', 'm', 
+            'p', 'j', 'n', 'q', 'k', 'o',
+        ]
+        self.assertEqual(all_nodes, compare)
+
 
 class TestPathTree(unittest.TestCase):
     def setUp(self):
@@ -1003,6 +1059,62 @@ class TestPathTree(unittest.TestCase):
         self.assertEqual(self.ptree.getChildren('a.b.c.g'), ['h'])
         self.assertEqual(self.ptree.getChildren('a.b.c.j'), [])
         self.assertEqual(self.ptree.getChildren('a.b.c.k'), [])
+
+    def testIter(self):
+        """__iter__ 메서드 테스트.
+
+        테스트 데이터 구조)
+        a
+        ├ b
+        │ ├ b
+        │ └ c
+        │   └ d
+        └ f
+          ├ g
+          │ ├ i
+          │ │ └ j
+          │ │   └ k
+          │ └ n
+          └ l
+            ├ m
+            │ └ n
+            │   └ o
+            └ p
+              └ q
+        
+        """
+        data = [
+            'a.b.c.d',
+            'a.b.b',
+            'a.f.g.n',
+            'a.f.g.i.j.k',
+            'a.f.l.m.n.o',
+            'a.f.l.p.q'
+        ]
+        self.ptree.appendAll(data, True)
+        
+        # test DFS
+        all_nodes = []
+        for node in self.ptree:
+            all_nodes.append(node)
+        self.assertEqual(len(all_nodes), self.ptree.lenTree())
+        compare = [
+            'a', 'b', 'b', 'c', 'd', 'f', 'g', 'i', 'j', 'k',
+            'n', 'l', 'm', 'n', 'o', 'p', 'q', 
+        ]
+        self.assertEqual(all_nodes, compare)
+
+        # test BFS
+        self.ptree.setIterMode(PathTree.IterMode.BFS)
+        all_nodes.clear()
+        for node in self.ptree:
+            all_nodes.append(node)
+        self.assertEqual(len(all_nodes), self.ptree.lenTree())
+        compare = [
+            'a', 'b', 'f', 'b', 'c', 'g', 'l', 'd', 'i', 'n', 
+            'm', 'p', 'j', 'n', 'q', 'k', 'o', 
+        ]
+        self.assertEqual(all_nodes, compare)
 
 
 if __name__ == '__main__':

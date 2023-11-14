@@ -1,8 +1,8 @@
 """개체들과 그 개체들의 트리 구조의 연결관계를 트리 구조로 표현."""
 
 import random
-from typing import Literal
 import heapq
+from typing import Literal
 
 from sub_modules.my_queue import DynamicQueue
 
@@ -79,6 +79,24 @@ class Tree():
     트리 전체 내부에 중복되는 노드는 허용하지 않음. 
     깊이가 서로 같은 특정 노드의 자식 노드들은 알파벳(한글) 오름차순으로 정렬됨. 
     """
+
+    class IterMode:
+        """__iter__ 메서드 사용 시 순회 방법 지정을 위한 상수 모음.
+
+        Attributes
+        ----------
+        DFS : str
+            DFS 방법으로 순회. 
+            즉, 한 번에 한 쪽 하위 트리만을 깊게 검색하는 방식. 
+        BFS : str
+            BFS 방법으로 순회. 
+            즉, 한 번에 같은 깊이의 노드들만을 집중적으로 검색하는 방식.
+        
+        """
+        DFS = "DFS"
+        BFS = "BFS"
+
+    
     def __init__(
             self,
             default_root: bool = False,
@@ -117,6 +135,7 @@ class Tree():
         else:
             self._root = None
         self.always_raise_error = always_raise_error
+        self._iter_mode = Tree.IterMode.DFS
 
     def getRoot(self) -> (Node | None): return self._root
 
@@ -174,6 +193,10 @@ class Tree():
             all_nodes.append((depth, node))
             children = self.getChildren(node)
             if children is not None:
+                # getTreeStructure()를 통해 트리 구조를 출력해보면
+                # 같은 계층의 노드들은 알파벳 순으로 정렬되어 출력된다.
+                # 이에 맞추기 위해 자식 노드들을 알파벳순으로 정렬함.
+                children.sort()
                 for c in children:
                     queue.enqueue((depth+1, c))
         return all_nodes
@@ -188,6 +211,43 @@ class Tree():
         if not all_info:
             return "<빈 트리>"
         return '\n'.join(all_info)
+
+    def __iter__(self):
+        """트리 내 모든 노드들에 대해 설정된 IterMode에 따라 노드들을 yield함."""
+        if self._iter_mode == Tree.IterMode.BFS:
+            all_nodes = self._bfs()
+            for _, node in all_nodes:
+                yield node
+        else:
+            # DFS 방식을 기본으로 함.
+            stack = [self._root]
+            while stack:
+                current_node = stack.pop()
+                yield current_node
+                # cn -> current node
+                cn_children = self.getChildren(current_node)
+                if cn_children == ([] or None):
+                    continue
+                cn_children.sort(reverse=True)
+                stack.extend(cn_children)
+
+    def setIterMode(self, iter_mode: IterMode = IterMode.DFS):
+        """이 클래스의 __iter__ 메서드를 통해 트리를 모두 순회할 시 
+        순회 방법을 설정하는 메서드. 
+
+        Parameters
+        ---------
+        iter_mode : IterMode
+            이 클래스의 클래스 속성인 IterMode 클래스의 상수들을 이용. 
+            DFS 
+                DFS방법으로 순회. 
+                즉, 한 번에 한 쪽 하위 트리만을 깊게 검색하는 방식. 
+            BFS
+                BFS 방법으로 순회. 
+                즉, 한 번에 같은 깊이의 노드들만을 집중적으로 검색하는 방식.
+        
+        """
+        self._iter_mode = iter_mode
 
     def getTreeStructure(self) -> (str):
         """트리 구조를 문자열로 구성하여 이를 반환. 
@@ -750,9 +810,14 @@ class PathTree(Tree):
         while not queue.isEmpty():
             depth, path = queue.dequeue()
             all_nodes.append((depth, path))
-            if path == self._root: children = self._adj_list[self._root].copy()
-            else: children = self.getChildren(path)
+            if path == self._root:
+                children = self._adj_list[self._root].copy()
+            else:
+                children = self.getChildren(path)
             if children != [] and children is not None:
+                # 트리 구조를 출력해보면 노드 이름 알파벳순으로 정렬되어 있다.
+                # 이에 맞춰서 순회 시에도 알파벳순으로 정렬하고 순회.
+                children.sort()
                 for c in children:
                     c = self.combineNodesToAbsPath(path, c)
                     queue.enqueue((depth+1, c))
@@ -767,6 +832,39 @@ class PathTree(Tree):
         if not all_info:
             return "<빈 트리>"
         return '\n'.join(all_info)
+    
+    def __iter__(self):
+        if self._iter_mode == super().IterMode.BFS:
+            all_nodes = self._bfs()
+            for _, node in all_nodes:
+                yield self.basename(node)
+        else:
+            # DFS 방식을 기본으로 함
+            stack: list[AbsPath] = [self._root]
+
+            # 이미 순회된 노드를 기록.
+            iterated_nodes: list[AbsPath] = []
+            while stack:
+                # 루트 노드일 경우, current_node_abspath == current_node
+                current_node_abspath = stack.pop()
+                current_node = self.basename(current_node_abspath)
+                if current_node_abspath not in iterated_nodes:
+                    yield current_node
+                iterated_nodes.append(current_node_abspath)
+                # cn -> current_node
+                cn_children = self.getChildren(current_node_abspath)
+                if cn_children == ({} or [] or None):
+                    continue
+                if isinstance(cn_children, dict):
+                    # current_node가 root 노드일 경우.
+                    cn_children = cn_children[current_node]
+                # 트리 구조를 출력해보면 노드 이름 알파벳순으로 정렬되어 있다.
+                # 이에 맞춰서 순회 시에도 알파벳순으로 정렬하고 순회.
+                cn_children.sort(reverse=True)
+                for c in cn_children:
+                    child_abspath = self.combineNodesToAbsPath(
+                        current_node_abspath, c)
+                    stack.append(child_abspath)
 
     def isAbsPath(self, node: Node | AbsPath) -> (bool):
         """node 매개변수로 주어진 개체가 노드 이름인지 절대경로인지를 판단해주는 메서드. 
